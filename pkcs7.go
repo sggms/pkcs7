@@ -166,6 +166,18 @@ func parseSignedData(data []byte) (*PKCS7, error) {
 			return nil, err
 		}
 	}
+
+	// Below piece of code is modified compared to the upstream. This modification is performed by Georg
+	// because the original upstream wasn't working on large files, hence the looping until everything
+	// is parsed and appending with `content = append(content, parsedContent...)`.
+	// Original upstream code snippet:
+	//  // Compound octet string
+	//  if compound.IsCompound {
+	//    if _, err = asn1.Unmarshal(compound.Bytes, &content); err != nil {
+	//      return nil, err
+	//    }
+	//  } else {
+
 	// Compound octet string
 	if compound.IsCompound {
 		var parsedContent []byte
